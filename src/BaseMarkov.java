@@ -1,14 +1,5 @@
 import java.util.*;
 
-/**
- * Implements the MarkovInterface to generate random text based
- * on a training text. Searches over training text to generate
- * each random word of generated text.
- * For use in Compsci 201, Fall 2022, Duke University
- * @author ola
- * @author Brandon Fain
- */
-
 public class BaseMarkov implements MarkovInterface {
 	
 	protected String[] myWords;		// Training text split into array of words 
