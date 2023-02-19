@@ -1,4 +1,4 @@
-import java.util.*;
+
 
 /**
  * A WordGram object represents an immutable
@@ -7,6 +7,7 @@ import java.util.*;
  * Add yourself as an author when you make edits
  * 
  * @author Brandon Fain
+ * @author Clementine Mohun
  */
 
 public class WordGram {
@@ -24,9 +25,8 @@ public class WordGram {
 	 * @param size   Number of elements in WordGram object
 	 */
 	public WordGram(String[] source, int start, int size) {
-		myToString = myWords.toString();
-		myHash = myToString.hashCode();
-		myWords = Arrays.copyOfRange(source, start, start + size);
+		myWords = new String[size];
+		System.arraycopy(source, start, myWords, 0, size);
 	}
 
 	/**
@@ -37,8 +37,10 @@ public class WordGram {
 	 * @throws IndexOutOfBoundsException if index < 0 or index >= length()
 	 */
 	public String wordAt(int index) {
-		String word1 = myWords[index];
-		return word1;
+		if (index < 0 || index >= myWords.length) {
+			throw new IndexOutOfBoundsException("bad index in wordAt "+index);
+		}
+		return myWords[index];
 	}
 
 	/**
@@ -60,12 +62,12 @@ public class WordGram {
 			return false;
 		}
 		WordGram other = (WordGram) o;
-		if (!(this.myWords.length == other.myWords.length)) {
+		if (!(this.length() == other.length())) {
 			return false;
 		} 
-		else if ((this.myWords.length == other.myWords.length)) {
-			for (int i = 0; i < other.myWords.length; i++) {
-				if (!(other.myWords[i] == this.myWords[i])) {
+		else if ((this.length() == other.length())) {
+			for (int i = 0; i < myWords.length; i++) {
+				if (!(myWords[i].equals(other.wordAt(i)))) {
 					return false;
 				}
 			}
@@ -80,8 +82,9 @@ public class WordGram {
 	 */
 	@Override
 	public int hashCode() {
-		String new1= this.toString();
-		myHash = new1.hashCode();
+		if (myHash == 0){
+			myHash = toString().hashCode();
+		}
 		return myHash;
 	}
 
@@ -110,13 +113,10 @@ public class WordGram {
 	 */
 	@Override
 	public String toString() {
-		String string1 = "";	
-		for (int i = 0; i < myWords.length; i++) {
-			string1 = string1 + (myWords[i]);
-			string1 = string1 + (" ");
+		if (myToString == null) {
+			myToString = String.join(" ",myWords);
 		}
-		return string1;
-	}
+		return myToString;
 
-	}
+		}	}
 

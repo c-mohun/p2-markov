@@ -39,8 +39,8 @@ public class HashMarkov implements MarkovInterface {
         WordGram current = new WordGram(myWords, randomIndex, myOrder);
         randomList.add(current.toString());
         for (int k = 0; k < length - myOrder; k += 1) {
-            List<String> nextWord = getFollows(current);
-            randomList.addAll(nextWord);
+            String nextWord = getFollows(current);
+            randomList.add(nextWord);
             current = current.shiftAdd(nextWord);
         }
         return String.join(" ", randomList);

@@ -97,7 +97,6 @@ public class BaseMarkov implements MarkovInterface {
 		int index = myRandom.nextInt(myWords.length - myOrder + 1);
 		WordGram current = new WordGram(myWords,index,myOrder);
 		randomWords.add(current.toString());
-
 		for(int k=0; k < length-myOrder; k += 1) {
 			String nextWord = getNext(current);
 			randomWords.add(nextWord);
