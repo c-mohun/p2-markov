@@ -1,51 +1,75 @@
 import java.util.*;
+public class HashMarkov implements MarkovInterface{
+	protected int myOrder;
+    protected Random RandomNumber;
+	protected String[] myWords;		
+    protected Map<WordGram,ArrayList<String>> myHashMap;
 
-public class HashMarkov implements MarkovInterface {
-    protected String[] myWords; // Training text split into array of words
-    protected Random myRandom; // Random number generator
-    protected int myOrder;
-    protected HashMap<Object, List<String>> myHashMap;
+    public HashMarkov(int order){
+		myOrder = order;
+        myHashMap = new HashMap<>();
+        RandomNumber = new Random();
+	}
 
-    public HashMarkov(int order) {
-        myOrder = order;
-        myRandom = new Random();
-    }
-
-    public void setTraining(String text) {
+	public void setTraining(String text){
         myHashMap.clear();
         myWords = text.split("\\s+");
-        for (int i = 0; i < myWords.length; i++) {
-            WordGram newgram = new WordGram(myWords, i, myOrder);
-            if (myHashMap.containsKey(newgram) == false) {
-                myHashMap.put(newgram, new ArrayList<>());
-            } else {
-                myHashMap.get(newgram).add(myWords[i]);
+        int i = 0;
+        while (i < myWords.length - myOrder){
+            WordGram wordgram = new WordGram(myWords, i, myOrder);
+            if(myHashMap.containsKey(wordgram)==false){
+               myHashMap.put(wordgram, new ArrayList<String>());
             }
+            myHashMap.get(wordgram).add(myWords[i + myOrder]);
+            i = i+1;
         }
+	}
+
+    @Override
+	public List<String> getFollows(WordGram wordgram1){
+        if(myHashMap.containsKey(wordgram1) == false){
+			return new ArrayList<>();
+		}
+		ArrayList<String> final1 = myHashMap.get(wordgram1);
+        return final1;
     }
 
-    public List<String> getFollows(WordGram wgram) {
-        List<String> terms = myHashMap.get(wgram);
-        if (terms != wgram) {
-            return terms;
-        } else {
-            return new ArrayList<String>();
-        }
-    }
+    private String getNext(WordGram wordgram2) {
+		List<String> follows = getFollows(wordgram2);
+		if ((follows.size() == 0)== true) {
+			int randomIndex = RandomNumber.nextInt(myWords.length);
+			return myWords[randomIndex];
+		}
+		else {
+			int size = follows.size();
+			int randomIndex = RandomNumber.nextInt(size);
+			return follows.get(randomIndex);
+		}
+	}
 
-    public String getRandomText(int length) {
-        ArrayList<String> randomList = new ArrayList<>(length);
-        int randomIndex = myRandom.nextInt(myWords.length - myOrder + 1);
-        WordGram current = new WordGram(myWords, randomIndex, myOrder);
-        randomList.add(current.toString());
-        return "hello";
-    }
+    @Override
+	public String getRandomText(int length){
+		int index = RandomNumber.nextInt(myWords.length - myOrder + 1);
+		WordGram current = new WordGram(myWords,index,myOrder);
+		ArrayList<String> newList = new ArrayList<>(length);
+		newList.add(current.toString());
+		int i = 0;
+		while (i<length-myOrder){
+			String nextWord = getNext(current);
+			newList.add(nextWord);
+			current = current.shiftAdd(nextWord);
+			i = i + 1;
+		}
+		return String.join(" ", newList);
+	}
 
-    public int getOrder() {
-        return myOrder;
-    }
+    @Override
+	public int getOrder() {
+		return myOrder;
+	}
 
-    public void setSeed(long seed) {
-        myRandom.setSeed(seed);
-    }
+    @Override
+	public void setSeed(long seed) {
+		RandomNumber.setSeed(seed);
+	}
 }
