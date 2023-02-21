@@ -33,7 +33,13 @@ public class HashMarkov implements MarkovInterface {
         }
     }
 
-    
+    public String getRandomText(int length) {
+        ArrayList<String> randomList = new ArrayList<>(length);
+        int randomIndex = myRandom.nextInt(myWords.length - myOrder + 1);
+        WordGram current = new WordGram(myWords, randomIndex, myOrder);
+        randomList.add(current.toString());
+        return "hello";
+    }
 
     public int getOrder() {
         return myOrder;
