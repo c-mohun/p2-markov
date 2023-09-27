@@ -3,12 +3,6 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test suite for HashMarkov
- *
- * @author Emily Du
- * @author Havish Malladi
- */
 public class MarkovTest {
 
     private MarkovInterface getModel(int order) {
